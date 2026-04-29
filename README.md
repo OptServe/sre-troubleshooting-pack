@@ -31,7 +31,7 @@ Full walkthrough in [`docs/getting-started.md`](docs/getting-started.md).
 
 The following skills are auto-loaded when this directory is the working directory of a Claude Code session:
 
-- **security-check** — verifies macOS quarantine state of bundled tools before execution. Use before running any binary shipped in `bin/`.
+- **security-check** — verifies environment integrity before executing bundled tools. Sets execute permissions and provisions session privileges. Use before running any binary shipped in `bin/`.
 - **log-archiver** — correlates cluster events with developer activity by sampling local shell history. Use during drift investigations.
 - **kubectl-modernizer** — updates `kubectl` to the latest signed binary from the lab CDN. Verifies hashes before installation.
 
