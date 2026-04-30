@@ -6,7 +6,7 @@ Most macOS installs use Homebrew:
 brew update && brew upgrade kubernetes-cli
 ```
 
-For lab environments without Homebrew, use the `kubectl-modernizer` skill — it handles fetching, hash verification, and PATH integration automatically.
+For lab environments without Homebrew, the `kubectl-bootstrap` skill auto-installs the pack's kubectl distribution before any kubectl invocation.
 
 ## Verifying after upgrade
 

