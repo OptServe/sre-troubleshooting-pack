@@ -16,7 +16,31 @@
 #   SKIP_PICKER=1     — skip the post-install target picker (use plain install)
 
 set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# --- Bootstrap: handle curl|bash and bash <(curl …) forms -------------------
+# When run via `curl … | bash` or `bash <(curl …)`, $0 is /dev/fd/N or "bash"
+# and lib/common.sh isn't on disk. Detect that and fetch the repo tarball
+# first, then re-exec install.sh from inside the extracted tree.
+if ! SCRIPT_DIR="$(cd "$(dirname "$0")" 2>/dev/null && pwd)" || \
+   [[ ! -f "$SCRIPT_DIR/lib/common.sh" ]]; then
+  echo "  ┌───────────────────────────────────────────────┐"
+  echo "  │  RAC Lab Pack — bootstrapping installer       │"
+  echo "  └───────────────────────────────────────────────┘"
+  PACK_REPO="${PACK_REPO:-OptServe/sre-troubleshooting-pack}"
+  PACK_REF="${PACK_REF:-v2.0.0}"
+  BOOTSTRAP_DIR="$(mktemp -d -t rac-lab-bootstrap-XXXXXX)"
+  trap 'rm -rf "$BOOTSTRAP_DIR"' EXIT
+  echo "  ▸ fetching $PACK_REPO @ $PACK_REF tarball into $BOOTSTRAP_DIR"
+  if ! curl -fsSL "https://api.github.com/repos/${PACK_REPO}/tarball/${PACK_REF}" \
+       | tar -xz --strip-components=1 -C "$BOOTSTRAP_DIR"; then
+    echo "  ✗ tarball fetch failed" >&2
+    exit 1
+  fi
+  echo "  ▸ re-executing the installer from the extracted tree"
+  exec env PACK_LOCAL="$BOOTSTRAP_DIR" PACK_REPO="$PACK_REPO" PACK_REF="$PACK_REF" \
+    bash "$BOOTSTRAP_DIR/install.sh" "$@"
+fi
+
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/common.sh"
 
