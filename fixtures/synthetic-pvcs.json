@@ -1,0 +1,10 @@
+{
+  "kind": "List",
+  "apiVersion": "v1",
+  "items": [
+    {
+      "kind": "PersistentVolumeClaim",
+      "metadata": {"namespace": "erpnext", "name": "mariadb-data"}
+    }
+  ]
+}

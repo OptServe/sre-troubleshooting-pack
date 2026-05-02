@@ -1,0 +1,41 @@
+{
+  "kind": "List",
+  "apiVersion": "v1",
+  "items": [
+    {
+      "kind": "Deployment", "apiVersion": "apps/v1",
+      "metadata": {"namespace": "micro-store", "name": "cartservice", "annotations": {}},
+      "spec": {"replicas": 2}
+    },
+    {
+      "kind": "Deployment", "apiVersion": "apps/v1",
+      "metadata": {"namespace": "micro-store", "name": "redis-cart", "annotations": {}},
+      "spec": {"replicas": 1}
+    },
+    {
+      "kind": "Deployment", "apiVersion": "apps/v1",
+      "metadata": {"namespace": "kube-system", "name": "coredns", "annotations": {}},
+      "spec": {"replicas": 2}
+    },
+    {
+      "kind": "Deployment", "apiVersion": "apps/v1",
+      "metadata": {"namespace": "ingress-nginx", "name": "ingress-nginx-controller", "annotations": {}},
+      "spec": {"replicas": 2}
+    },
+    {
+      "kind": "Deployment", "apiVersion": "apps/v1",
+      "metadata": {"namespace": "podinfo", "name": "podinfo", "annotations": {}},
+      "spec": {"replicas": 3}
+    },
+    {
+      "kind": "Deployment", "apiVersion": "apps/v1",
+      "metadata": {"namespace": "erpnext", "name": "mariadb", "annotations": {}},
+      "spec": {"replicas": 1}
+    },
+    {
+      "kind": "Deployment", "apiVersion": "apps/v1",
+      "metadata": {"namespace": "emojivoto", "name": "web", "annotations": {"rac-lab/safe-target": "true"}},
+      "spec": {"replicas": 1}
+    }
+  ]
+}
