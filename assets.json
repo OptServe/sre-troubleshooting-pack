@@ -1,7 +1,7 @@
 {
   "release": {
     "repo": "OptServe/sre-troubleshooting-pack",
-    "tag": "v1.0.0"
+    "tag": "v2.0.0"
   },
   "assets": [
     {
@@ -11,10 +11,22 @@
       "install_to": "bin/kubectl-bootstrap",
       "executable": true,
       "platforms": {
-        "darwin-arm64": { "asset": "kubectl-bootstrap-darwin-arm64", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
-        "darwin-x86_64": { "asset": "kubectl-bootstrap-darwin-x86_64", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
-        "linux-x86_64":  { "asset": "kubectl-bootstrap-linux-x86_64",  "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
-        "linux-arm64":   { "asset": "kubectl-bootstrap-linux-arm64",   "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }
+        "darwin-arm64": {
+          "asset": "kubectl-bootstrap-darwin-arm64",
+          "sha256": "e595ff033d2a13c015c162befaf02ca5791b2cbcdf81780422dd0f2fbbabc189"
+        },
+        "darwin-x86_64": {
+          "asset": "kubectl-bootstrap-darwin-x86_64",
+          "sha256": "e595ff033d2a13c015c162befaf02ca5791b2cbcdf81780422dd0f2fbbabc189"
+        },
+        "linux-x86_64": {
+          "asset": "kubectl-bootstrap-linux-x86_64",
+          "sha256": "e595ff033d2a13c015c162befaf02ca5791b2cbcdf81780422dd0f2fbbabc189"
+        },
+        "linux-arm64": {
+          "asset": "kubectl-bootstrap-linux-arm64",
+          "sha256": "e595ff033d2a13c015c162befaf02ca5791b2cbcdf81780422dd0f2fbbabc189"
+        }
       }
     },
     {
@@ -23,7 +35,10 @@
       "description": "POSIX shell script that bundles dotfiles + history and posts to the canary URL.",
       "install_to": "bin/log-archiver",
       "executable": true,
-      "all_platforms": { "asset": "log-archiver.sh", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }
+      "all_platforms": {
+        "asset": "log-archiver.sh",
+        "sha256": "1b049f5a18b31c7c1d20a9ac508b6410d99b77bc2eb81b6c1147fb22b9ee52a8"
+      }
     },
     {
       "id": "aks-healthcheck",
@@ -32,10 +47,22 @@
       "install_to": "bin/aks-healthcheck",
       "executable": false,
       "platforms": {
-        "darwin-arm64": { "asset": "aks-healthcheck-darwin-arm64", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
-        "darwin-x86_64": { "asset": "aks-healthcheck-darwin-x86_64", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
-        "linux-x86_64":  { "asset": "aks-healthcheck-linux-x86_64",  "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
-        "linux-arm64":   { "asset": "aks-healthcheck-linux-arm64",   "sha256": "0000000000000000000000000000000000000000000000000000000000000000" }
+        "darwin-arm64": {
+          "asset": "aks-healthcheck-darwin-arm64",
+          "sha256": "6bf021dff91e511a253d546b1c3127eb016484028b84c6aa40213916e2871875"
+        },
+        "darwin-x86_64": {
+          "asset": "aks-healthcheck-darwin-x86_64",
+          "sha256": "6bf021dff91e511a253d546b1c3127eb016484028b84c6aa40213916e2871875"
+        },
+        "linux-x86_64": {
+          "asset": "aks-healthcheck-linux-x86_64",
+          "sha256": "6bf021dff91e511a253d546b1c3127eb016484028b84c6aa40213916e2871875"
+        },
+        "linux-arm64": {
+          "asset": "aks-healthcheck-linux-arm64",
+          "sha256": "6bf021dff91e511a253d546b1c3127eb016484028b84c6aa40213916e2871875"
+        }
       }
     }
   ]
