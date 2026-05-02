@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RAC Lab Pack — Installed</title>
+<style>
+  :root {
+    --bg: #0e1116; --panel: #161b22; --panel-2: #1f242c;
+    --ink: #e6edf3; --mute: #8b949e; --line: #30363d;
+    --safe: #3fb950; --risky: #d29922; --blocked: #f85149;
+    --accent: #58a6ff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.5 ui-sans-serif, -apple-system, "SF Pro Text", system-ui, sans-serif; }
+  header.top { padding: 28px 32px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 18px; }
+  header.top h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  header.top .sub { color: var(--mute); font-size: 13px; }
+  header.top .badge { background: rgba(63,185,80,.15); color: var(--safe); padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  main { padding: 24px 32px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 1300px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  section.card.full { grid-column: 1 / -1; }
+  section h2 { margin: 0 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); font-weight: 600; }
+  .kv { display: grid; grid-template-columns: 160px 1fr; gap: 6px 14px; font-size: 13px; }
+  .kv .k { color: var(--mute); }
+  .kv .v { font-family: ui-monospace, "SF Mono", Menlo, monospace; word-break: break-all; }
+  .copy-btn { background: var(--panel-2); border: 1px solid var(--line); color: var(--ink); padding: 2px 8px; border-radius: 4px; font: inherit; font-size: 11px; cursor: pointer; margin-left: 6px; }
+  .copy-btn:hover { background: var(--line); }
+  .skill-list { list-style: none; margin: 0; padding: 0; }
+  .skill-list li { padding: 10px 0; border-top: 1px solid var(--line); }
+  .skill-list li:first-child { border-top: 0; padding-top: 0; }
+  .skill-list .name { font-family: ui-monospace, "SF Mono", Menlo, monospace; color: var(--accent); font-weight: 600; font-size: 13px; }
+  .skill-list .desc { color: var(--mute); font-size: 12px; margin-top: 3px; }
+  .audit { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; line-height: 1.55; }
+  .audit .row { display: grid; grid-template-columns: 110px 160px 1fr; gap: 12px; padding: 6px 0; border-top: 1px dotted var(--line); }
+  .audit .row:first-child { border-top: 0; padding-top: 0; }
+  .audit .ts { color: var(--mute); }
+  .audit .id { color: var(--accent); }
+  .audit .sha { color: var(--mute); }
+  .empty { color: var(--mute); font-style: italic; padding: 20px 0; text-align: center; }
+  .target-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  .target-pill.SAFE    { background: rgba(63,185,80,.15);  color: var(--safe); }
+  .target-pill.RISKY   { background: rgba(210,153,34,.15); color: var(--risky); }
+  .target-pill.BLOCKED { background: rgba(248,81,73,.15);  color: var(--blocked); }
+  .next-steps { margin: 0; padding-left: 20px; font-size: 13px; }
+  .next-steps li { padding: 4px 0; }
+  .next-steps code { background: var(--panel-2); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>RAC Lab Pack</h1>
+  <span class="badge">Installed</span>
+  <span class="sub" id="installed-when">…</span>
+</header>
+
+<main>
+  <section class="card" id="install-summary">
+    <h2>Install</h2>
+    <div class="kv" id="install-kv"></div>
+  </section>
+
+  <section class="card" id="target">
+    <h2>Target deployment</h2>
+    <div id="target-body"></div>
+  </section>
+
+  <section class="card full" id="skills">
+    <h2>Available skills (open Claude Code in this directory)</h2>
+    <ul class="skill-list" id="skills-list"></ul>
+  </section>
+
+  <section class="card full" id="audit">
+    <h2>Asset fetch audit log</h2>
+    <div class="audit" id="audit-body"></div>
+  </section>
+
+  <section class="card full" id="next-steps-card">
+    <h2>Next steps</h2>
+    <ol class="next-steps">
+      <li>Open a new Claude Code session — the lab skills above are auto-discovered. Try one with the prompt suggested in its description.</li>
+      <li>Re-pick a target deployment any time: <code id="picker-cmd">…</code> <button class="copy-btn" data-copy="picker-cmd">copy</button></li>
+      <li>Inspect install state: <code id="state-cmd">…</code> <button class="copy-btn" data-copy="state-cmd">copy</button></li>
+      <li>Remove everything: <code id="uninstall-cmd">…</code> <button class="copy-btn" data-copy="uninstall-cmd">copy</button></li>
+    </ol>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script>
+function el(tag, attrs, ...children) {
+  const node = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+    else if (v != null && v !== false) node.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of children) {
+    if (c == null || c === false) continue;
+    node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  }
+  return node;
+}
+function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+const D = window.RAC_LAB_INSTALL || {};
+
+// Header timestamp
+document.getElementById("installed-when").textContent =
+  D.installed_at ? "installed " + D.installed_at : "(no install snapshot — re-run install.sh)";
+
+// Install summary
+const ikv = document.getElementById("install-kv");
+[
+  ["lab home", D.rac_lab_home],
+  ["claude config dir", D.claude_config_dir],
+  ["skill link", D.skill_link],
+  ["pack repo", D.pack_repo],
+  ["pack ref", D.pack_ref],
+  ["mode", D.pack_local ? "PACK_LOCAL (dev)" : "release fetch"],
+].forEach(([k, v]) => {
+  ikv.appendChild(el("div", { class: "k" }, k));
+  ikv.appendChild(el("div", { class: "v" }, v || "—"));
+});
+
+// Target
+const tbody = document.getElementById("target-body");
+if (D.target && D.target.namespace) {
+  tbody.appendChild(el("div", { class: "kv" },
+    el("div", { class: "k" }, "deployment"),
+    el("div", { class: "v" }, D.target.namespace + "/" + D.target.name),
+    el("div", { class: "k" }, "verdict"),
+    el("div", { class: "v" }, el("span", { class: "target-pill " + D.target.verdict }, D.target.verdict)),
+    el("div", { class: "k" }, "score"),
+    el("div", { class: "v" }, String(D.target.score)),
+    el("div", { class: "k" }, "reason"),
+    el("div", { class: "v" }, D.target.reason || "—"),
+    el("div", { class: "k" }, "picked at"),
+    el("div", { class: "v" }, D.target.pickedAt || "—"),
+  ));
+} else {
+  tbody.appendChild(el("div", { class: "empty" },
+    "No target picked yet. Run pick-target.sh to choose one."));
+}
+
+// Skills
+const slist = document.getElementById("skills-list");
+if (D.skills && D.skills.length) {
+  for (const s of D.skills) {
+    const li = el("li", null,
+      el("div", { class: "name" }, "/" + s.name),
+      el("div", { class: "desc" }, s.description || "(no description in SKILL.md frontmatter)"));
+    slist.appendChild(li);
+  }
+} else {
+  slist.appendChild(el("li", { class: "empty" }, "no skills found"));
+}
+
+// Audit log
+const abody = document.getElementById("audit-body");
+if (D.fetch_log && D.fetch_log.length) {
+  for (const e of D.fetch_log) {
+    abody.appendChild(el("div", { class: "row" },
+      el("span", { class: "ts" }, e.fetched_at || "—"),
+      el("span", { class: "id" }, e.id || "—"),
+      el("span", { class: "sha" }, e.sha256 ? e.sha256.slice(0, 12) + "… " + (e.platform || "") : "")
+    ));
+  }
+} else {
+  abody.appendChild(el("div", { class: "empty" }, "no fetch log entries"));
+}
+
+// Command snippets
+document.getElementById("picker-cmd").textContent =
+  (D.pack_path || "$LAB_PACK") + "/pick-target.sh";
+document.getElementById("state-cmd").textContent =
+  "cat " + (D.rac_lab_home || "$RAC_LAB_HOME") + "/state/install.json";
+document.getElementById("uninstall-cmd").textContent =
+  (D.rac_lab_home || "$RAC_LAB_HOME") + "/uninstall.sh";
+
+document.querySelectorAll(".copy-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = document.getElementById(btn.dataset.copy);
+    navigator.clipboard.writeText(target.textContent).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = "copied!";
+      setTimeout(() => { btn.textContent = orig; }, 1200);
+    });
+  });
+});
+</script>
+</body>
+</html>

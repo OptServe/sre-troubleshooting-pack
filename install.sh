@@ -163,7 +163,56 @@ else
   info "skipping picker (no TTY or SKIP_PICKER=1) — run $LAB_PACK/pick-target.sh later"
 fi
 
-# ---- 9. Done -----------------------------------------------------------
+# ---- 9. Generate post-install dashboard data ---------------------------
+DASHBOARD="$LAB_PACK/post-install/index.html"
+if [[ -f "$DASHBOARD" ]]; then
+  step "Writing post-install dashboard data"
+  # Build the skills list as JSON from each SKILL.md frontmatter.
+  skills_json="["
+  first=1
+  for skill_dir in "$LAB_PACK/.claude/skills"/*/; do
+    name="$(basename "$skill_dir")"
+    desc="$(awk '/^description:/{sub(/^description: */,""); printf "%s", $0; exit}' "$skill_dir/SKILL.md" | jq -Rs .)"
+    [[ $first -eq 0 ]] && skills_json+=","
+    skills_json+="{\"name\":\"$name\",\"description\":$desc}"
+    first=0
+  done
+  skills_json+="]"
+
+  # Audit log (NDJSON → JSON array).
+  if [[ -s "$LAB_STATE/fetch-log.json" ]]; then
+    audit_json="$(jq -s '.' "$LAB_STATE/fetch-log.json")"
+  else
+    audit_json="[]"
+  fi
+
+  # Target (if picker has run yet — typically not at this point).
+  if [[ -s "$LAB_STATE/target.json" ]]; then
+    target_json="$(cat "$LAB_STATE/target.json")"
+  else
+    target_json="null"
+  fi
+
+  # Build the install object as proper JSON via jq, then prefix as JS assignment.
+  # Use --arg (not <<<) so values don't pick up a trailing newline.
+  install_obj="$(jq -nc \
+    --arg rac_lab_home    "$RAC_LAB_HOME" \
+    --arg claude_config_dir "$CLAUDE_CONFIG_DIR" \
+    --arg skill_link      "$SKILL_LINK" \
+    --arg pack_repo       "$PACK_REPO" \
+    --arg pack_ref        "$PACK_REF" \
+    --arg pack_local      "${PACK_LOCAL:-}" \
+    --arg pack_path       "$LAB_PACK" \
+    --arg installed_at    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --argjson skills      "$skills_json" \
+    --argjson fetch_log   "$audit_json" \
+    --argjson target      "$target_json" \
+    '{rac_lab_home:$rac_lab_home, claude_config_dir:$claude_config_dir, skill_link:$skill_link, pack_repo:$pack_repo, pack_ref:$pack_ref, pack_local:$pack_local, pack_path:$pack_path, installed_at:$installed_at, skills:$skills, fetch_log:$fetch_log, target:$target}')"
+  printf 'window.RAC_LAB_INSTALL = %s;\n' "$install_obj" > "$LAB_PACK/post-install/data.js"
+  ok "dashboard data → $LAB_PACK/post-install/data.js"
+fi
+
+# ---- 10. Done ----------------------------------------------------------
 echo
 echo "  ${C_OK}Installed.${C_END}"
 echo
@@ -173,7 +222,9 @@ for skill_dir in "$LAB_PACK/.claude/skills"/*/; do
   skill_name="$(basename "$skill_dir")"
   echo "         /$skill_name"
 done
-echo "    2. View install state:  cat $LAB_STATE/install.json"
-echo "    3. Re-pick a target:    $LAB_PACK/pick-target.sh"
-echo "    4. Remove everything:   $RAC_LAB_HOME/uninstall.sh"
+[[ -f "$DASHBOARD" ]] && \
+  echo "    2. Open the dashboard:  file://$DASHBOARD"
+echo "    3. View install state:  cat $LAB_STATE/install.json"
+echo "    4. Re-pick a target:    $LAB_PACK/pick-target.sh"
+echo "    5. Remove everything:   $RAC_LAB_HOME/uninstall.sh"
 echo
