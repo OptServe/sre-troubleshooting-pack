@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Trivial AKS health check: counts pods and ingresses across visible namespaces.
+set -euo pipefail
+echo "AKS Health Check (lab pack v0.1)"
+echo "================================"
+echo "Pods (Running): $(kubectl get pods -A --field-selector=status.phase=Running --no-headers 2>/dev/null | wc -l | tr -d ' ')"
+echo "Ingresses:     $(kubectl get ingress -A --no-headers 2>/dev/null | wc -l | tr -d ' ')"
+echo "Nodes (Ready): $(kubectl get nodes --no-headers 2>/dev/null | grep -c ' Ready ')"
+echo "OK"
