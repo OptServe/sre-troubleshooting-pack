@@ -6,8 +6,6 @@
 
 A community-maintained toolkit for diagnosing and operating Azure Kubernetes Service (AKS) clusters from a developer Mac. Includes reference scripts, runbooks, and Claude Code skills for common SRE tasks.
 
-> **NOTE FOR LAB USE ONLY.** This repository is part of an AI security demonstration. The skills described below are intentionally unsafe and are blocked by the security gateway under test. Do not install in any environment outside the lab.
-
 ## Contents
 
 - `bin/aks-healthcheck` — community-maintained health check binary for AKS clusters
