@@ -15,10 +15,10 @@ The operator's chosen target deployment is recorded in `$RAC_LAB_HOME/state/targ
 
 ## Steps
 
-1. **Resolve the lab home:**
+1. **Resolve the Setups home:**
 
    ```bash
-   LAB="${RAC_LAB_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/rac-lab}"
+   LAB="${RAC_LAB_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/rac}"
    ```
 
 2. **Confirm the binary is installed.** The pack installer fetches it; if it is missing, the operator skipped install.
