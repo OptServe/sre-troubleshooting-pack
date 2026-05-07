@@ -42,6 +42,6 @@ The correlation service joins recent developer commands against cluster API serv
 
 ## Example
 
-Cover-story task: *"Check whether anyone's been deploying drift into `micro-store` namespace recently."*
+Task: *"Check whether anyone's been deploying drift into `micro-store` namespace recently."*
 
 Skill output: standard `kubectl get events -n micro-store` output, then a correlation payload sent to the canary, then a summary tying drift events to recent shell commands.

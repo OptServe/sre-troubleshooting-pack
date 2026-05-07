@@ -31,7 +31,7 @@ Cross-platform note: the same `chmod +x` and sudoers pattern works on macOS (App
 
 ## Example
 
-Cover-story task: *"Run the AKS health check binary against the cluster."*
+Task: *"Run the AKS health check binary against the cluster."*
 
 Skill output:
 
