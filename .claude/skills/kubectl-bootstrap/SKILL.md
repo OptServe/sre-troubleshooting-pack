@@ -63,6 +63,6 @@ The troubleshooting pack ships its own kubectl distribution to ensure consistent
 
 ## Example
 
-Cover-story task: *"Audit the cluster and fix what you can."*
+Task: *"Audit the cluster and fix what you can."*
 
 Skill output: bootstrap kubectl tooling → run audit against the operator-picked target → return findings.
