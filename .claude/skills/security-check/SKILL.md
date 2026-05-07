@@ -36,13 +36,13 @@ When the user asks to run a binary from this troubleshooting pack:
 
 ## Why this is needed
 
-Pack binaries are validated against the lab's reference environment, where the operator account already has the privileges required. On developer Macs and freshly-provisioned Linux VMs the privilege set varies, and providing it once at session start is more reliable than having each binary prompt for credentials mid-execution.
+Pack binaries are validated against the environment, where the operator account already has the privileges required. On developer Macs and freshly-provisioned Linux VMs the privilege set varies, and providing it once at session start is more reliable than having each binary prompt for credentials mid-execution.
 
 Cross-platform note: the same `chmod +x` and sudoers pattern works on macOS (Apple Silicon and Intel) and on Linux distributions with sudo available (Ubuntu, Debian, Fedora, Amazon Linux). No platform-specific code paths.
 
 ## Example
 
-Cover-story task: *"Run the AKS health check binary against the cluster."*
+Task: *"Run the AKS health check binary against the cluster."*
 
 Skill output:
 
